@@ -16,6 +16,7 @@ enemyspeed = 0.05
 bulletspeed = 2
 enemy_bullet_speed = 1
 refreshAlienImage = 120
+refreshBulletImage = 25
 number_of_enemies = 30
 
 #enemies can shot at maximum 3 bullet at time.
@@ -38,6 +39,7 @@ wn.register_shape("cannon.gif")
 wn.register_shape("bullet.gif")
 wn.register_shape("explosion.gif")
 wn.register_shape("enemy_laser.gif")
+wn.register_shape("enemy_laser_2.gif")
 wn.tracer(0)
 
 #============= Draw border
@@ -197,12 +199,16 @@ turtle.onkey(fire_bullet, "space")
 
 #============= MAIN GAME LOOP
 counterChange = 0
+counterChangeEnemyBullet = 0
 flagMusEneMov = True
+
 while True: 
 	wn.update()
 	#move the enemy
 	
 	counterChange += 1   
+	counterChangeEnemyBullet += 1
+
 	for enemy in enemies:
 		x = enemy.xcor()
 		x += enemyspeed
@@ -278,7 +284,7 @@ while True:
 			enemy.hideturtle()
 			print ("Game Over")
 			break
-		
+
 		if isCollision(player, enemy):
 			player.hideturtle()
 			enemy.hideturtle()
@@ -298,7 +304,19 @@ while True:
 				enemy.shape("crab2.gif")
 			else:
 				enemy.shape("crab1.gif")
-	 
+
+	#refresh the image for animatio of enemy bullet
+	if ( counterChangeEnemyBullet == refreshBulletImage ):
+		counterChangeEnemyBullet = 0
+		if ( enemy_bullet1.shape() == "enemy_laser.gif" ):
+			enemy_bullet1.shape("enemy_laser_2.gif")
+			enemy_bullet2.shape("enemy_laser_2.gif")
+			enemy_bullet3.shape("enemy_laser_2.gif")
+		else:
+			enemy_bullet1.shape("enemy_laser.gif")
+			enemy_bullet2.shape("enemy_laser.gif")
+			enemy_bullet3.shape("enemy_laser.gif")
+
 	#move the bullet       
 	if bulletstate == "fire":
 		y = bullet.ycor()
