@@ -234,7 +234,7 @@ while True:
 				elif not ( getattr(enemy_bullet2,"fired") ):
 					fire_bullet_enemy (enemy,enemy_bullet2)
 					setattr(enemy_bullet2,"fired",True) 
-				elif not ( getattr(enemy_bullet3,"fired") ):
+				elif not ( getattr(enemy_bullet3,"fired") ): 
 					fire_bullet_enemy (enemy,enemy_bullet3)
 					setattr(enemy_bullet3,"fired",True) 
 
