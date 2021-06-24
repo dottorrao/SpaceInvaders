@@ -259,6 +259,25 @@ while True:
 			scorestring = "Score: %s" %score
 			score_pen.clear()
 		  	score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal") )
+
+		#check collision between player and enemy bullet
+		if isCollision(enemy_bullet1, player):
+			player.hideturtle()
+			enemy.hideturtle()
+			print ("Game Over")
+			break
+
+		if isCollision(enemy_bullet2, player):
+			player.hideturtle()
+			enemy.hideturtle()
+			print ("Game Over")
+			break
+
+		if isCollision(enemy_bullet3, player):
+			player.hideturtle()
+			enemy.hideturtle()
+			print ("Game Over")
+			break
 		
 		if isCollision(player, enemy):
 			player.hideturtle()
