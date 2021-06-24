@@ -18,6 +18,7 @@ enemy_bullet_speed = 1
 refreshAlienImage = 120
 refreshBulletImage = 25
 number_of_enemies = 30
+start_game = False
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -35,6 +36,8 @@ wn.bgcolor("black")
 wn.title("Space Invaders")
 wn.register_shape("crab1.gif")
 wn.register_shape("crab2.gif")
+wn.register_shape("binky1.gif")
+wn.register_shape("binky2.gif")
 wn.register_shape("cannon.gif")
 wn.register_shape("bullet.gif")
 wn.register_shape("explosion.gif")
@@ -68,6 +71,16 @@ scorestring = "Score: %s" %score
 score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal") )
 score_pen.hideturtle()
 
+'''
+#draw the screen message (press start to play... game over...)
+diplay_message_pen = turtle.Turtle()
+diplay_message_pen.speed(0)
+diplay_message_pen.color("white")
+diplay_message_pen.penup()
+diplay_message_pen.setposition(0,0)
+diplay_message_pen.write("PRESS A BOTTON TO START", False, align="left", font=("Arial", 14, "normal") )
+'''
+
 #============= OBJECTS
 #player
 player = turtle.Turtle()
@@ -87,24 +100,31 @@ for i in range (number_of_enemies):
 
 enemy_start_x = -225
 enemy_start_y = 250
-enemy_number = 0
+#this variable is used to dispose the enemy in matrix
+enemy_number_for_matrix = 0
+#this variable is used to change the shape of the enemy
+enemy_number_for_shape = 0
 
 for enemy in enemies:
+	enemy_number_for_shape += 1
 	#enemy
 	#enemy.color("red")
 	setattr(enemy, "fired", False)
-	enemy.shape("crab1.gif")
+	if ( enemy_number_for_shape <= 10 ):
+		enemy.shape("binky1.gif")
+	else:
+		enemy.shape("crab1.gif")
+	
 	enemy.penup()
 	enemy.speed(0)
-	x = enemy_start_x + (50 * enemy_number)
+	x = enemy_start_x + (50 * enemy_number_for_matrix)
 	y = enemy_start_y
 	enemy.setposition(x, y)
 	#update enemy number
-	enemy_number += 1
-	if enemy_number == 10:
-		enemy_number = 0
+	enemy_number_for_matrix += 1
+	if enemy_number_for_matrix == 10:
+		enemy_number_for_matrix = 0
 		enemy_start_y -= 50
-
 
 #player's bullet
 bullet = turtle.Turtle()
@@ -191,11 +211,16 @@ def isCollision(t1,t2):
 	else:
 		return False
 
+def start_game_():
+	start_game = True
+
+
 #============= Create keyboard bindings
 turtle.listen()
 turtle.onkey(move_left, "Left")
 turtle.onkey(move_right, "Right")
 turtle.onkey(fire_bullet, "space")
+turtle.onkey(start_game_, "s")
 
 #============= MAIN GAME LOOP
 counterChange = 0
@@ -209,11 +234,12 @@ while True:
 	counterChange += 1   
 	counterChangeEnemyBullet += 1
 
+
 	for enemy in enemies:
 		x = enemy.xcor()
 		x += enemyspeed
 		enemy.setx(x)
-		print (getattr(enemy,"fired"))
+		#print (getattr(enemy,"fired"))
 
 		#move the enemy back
 		if ( (enemy.xcor() > 270 ) or (enemy.xcor() < -270 )  ) :
@@ -232,7 +258,7 @@ while True:
 			val = player.xcor() - enemy.xcor()
 			if ( abs(val) < 50):
 			#if (1==1):
-				print ("this enemy is upper to player!")
+				#print ("this enemy is upper to player!")
 				#checking if there are enemy bullets available: only three at same time can be shooted
 				if not ( getattr(enemy_bullet1,"fired") ):
 					fire_bullet_enemy (enemy,enemy_bullet1)
@@ -292,18 +318,27 @@ while True:
 			break
 	
 	if ( counterChange == refreshAlienImage ):	
+		counterChange = 0
+		
 		if flagMusEneMov:
 			os.system("afplay enemy_move1.wav&")
 			flagMusEneMov = False
 		else:
 			os.system("afplay enemy_move2.wav&")
 			flagMusEneMov = True
-		counterChange = 0
+		
 		for enemy in enemies:
 			if ( enemy.shape() == "crab1.gif" ):
 				enemy.shape("crab2.gif")
-			else:
+			elif ( enemy.shape() == "crab2.gif" ):
 				enemy.shape("crab1.gif")
+		
+		for enemy in enemies:
+			if ( enemy.shape() == "binky1.gif" ):
+				enemy.shape("binky2.gif")
+			elif ( enemy.shape() == "binky2.gif" ):
+				enemy.shape("binky1.gif")
+
 
 	#refresh the image for animatio of enemy bullet
 	if ( counterChangeEnemyBullet == refreshBulletImage ):
