@@ -11,7 +11,7 @@ import random
 #============= Inizialization
 #speed of the player
 playerspeed = 20
-enemyspeed = 0.1 #0.06
+enemyspeed = 0.05
 bulletspeed = 2
 enemy_bullet_speed = 0.5
 refreshAlienImage = 120
@@ -304,19 +304,19 @@ while True:
 			#checking for enemies speed increase.
 			#if number of enemnies killed is equal to a certain target, the enemy speed is increased.
 			if ( enemies_killed ) == ( number_of_enemies // 5 ):
-				enemyspeed *= 1
+				enemyspeed *= 1.3
 			if ( enemies_killed ) == ( number_of_enemies // 4 ):
-				enemyspeed *= 1
+				enemyspeed *= 1.4
 			if ( enemies_killed ) == ( number_of_enemies // 3 ):
-				enemyspeed *= 1
+				enemyspeed *= 1.5
 			if ( enemies_killed ) == ( number_of_enemies // 2 ):
-				enemyspeed *= 1
+				enemyspeed *= 1.6
 			if ( enemies_killed ) == ( number_of_enemies - 3 ):
-				enemyspeed *= 1
+				enemyspeed *= 1.7
 			if ( enemies_killed ) == ( number_of_enemies - 2 ):
-				enemyspeed *= 1
+				enemyspeed *= 2
 			if ( enemies_killed ) == ( number_of_enemies - 1 ):
-				enemyspeed *= 1
+				enemyspeed *= 2
 		
 		#check collision between player and enemy bullet
 		#if isCollision(enemy_bullet1, player):
