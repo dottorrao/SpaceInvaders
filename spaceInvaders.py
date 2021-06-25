@@ -10,15 +10,15 @@ import random
 
 #============= Inizialization
 #speed of the player
-playerspeed = 10
-
-enemyspeed = 0.05
+playerspeed = 20
+enemyspeed = 0.1 #0.06
 bulletspeed = 2
-enemy_bullet_speed = 1
+enemy_bullet_speed = 0.5
 refreshAlienImage = 120
 refreshBulletImage = 25
-number_of_enemies = 30
 start_game = False
+number_of_enemies = 30
+enemies_killed = 0
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -120,6 +120,7 @@ for enemy in enemies:
 	x = enemy_start_x + (50 * enemy_number_for_matrix)
 	y = enemy_start_y
 	enemy.setposition(x, y)
+	#enemy.shapesize (0.5,0.5)
 	#update enemy number
 	enemy_number_for_matrix += 1
 	if enemy_number_for_matrix == 10:
@@ -238,11 +239,19 @@ while True:
 	for enemy in enemies:
 		x = enemy.xcor()
 		x += enemyspeed
-		enemy.setx(x)
-		#print (getattr(enemy,"fired"))
+		#an enemy must be moved only if it's not fired, othervise it cause a problem into global enemy moviment.
+		#an enemy fired is moved on position (0,10000) but without this if it will continue to move causing a wrong
+		#descending of whole alien "team"
+		if not(getattr(enemy,"fired")):
+			enemy.setx(x)
+			#print (getattr(enemy,"fired"))
+
+		print ( str(enemy.xcor()) + ' - ' + str ( enemy.ycor() ) ) 
 
 		#move the enemy back
 		if ( (enemy.xcor() > 270 ) or (enemy.xcor() < -270 )  ) :
+			print ("revert!")
+			print ( enemy.xcor() )
 			#revert the direction and move all enemy down
 			enemyspeed *= -1
 			for e in enemies:
@@ -272,6 +281,7 @@ while True:
 
 		#Check for a collision between the bullet and the enemy
 		if isCollision(bullet, enemy):
+			enemies_killed += 1
 			setattr(enemy, "fired", True)
 			os.system("afplay enemy_explosion.wav&")
 			enemy.shape("explosion.gif")
@@ -284,28 +294,47 @@ while True:
 			#x = random.randint (-200, 200)
 			#y = random.randint (100, 250)
 			#set alien fired out of screen
-			enemy.setposition(0,10000)
+			enemy.setposition(0,100000)
 			enemy.setposition(enemy.xcor(), enemy.ycor())
 			#update the score
 			score += 10
 			scorestring = "Score: %s" %score
 			score_pen.clear()
 		  	score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal") )
-
+			#checking for enemies speed increase.
+			#if number of enemnies killed is equal to a certain target, the enemy speed is increased.
+			if ( enemies_killed ) == ( number_of_enemies // 5 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies // 4 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies // 3 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies // 2 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies - 3 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies - 2 ):
+				enemyspeed *= 1
+			if ( enemies_killed ) == ( number_of_enemies - 1 ):
+				enemyspeed *= 1
+		
 		#check collision between player and enemy bullet
-		if isCollision(enemy_bullet1, player):
+		#if isCollision(enemy_bullet1, player):
+		if 1==0:
 			player.hideturtle()
 			enemy.hideturtle()
 			print ("Game Over")
 			break
 
-		if isCollision(enemy_bullet2, player):
+		#if isCollision(enemy_bullet2, player):
+		if 1==0:	
 			player.hideturtle()
 			enemy.hideturtle()
 			print ("Game Over")
 			break
 
-		if isCollision(enemy_bullet3, player):
+		#if isCollision(enemy_bullet3, player):
+		if 1==0:
 			player.hideturtle()
 			enemy.hideturtle()
 			print ("Game Over")
@@ -316,7 +345,7 @@ while True:
 			enemy.hideturtle()
 			print ("Game Over")
 			break
-	
+
 	if ( counterChange == refreshAlienImage ):	
 		counterChange = 0
 		
