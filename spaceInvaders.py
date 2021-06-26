@@ -12,7 +12,7 @@ import random
 #speed of the player
 playerspeed = 20
 enemyspeed = 0.03
-bulletspeed = 1.5
+bulletspeed = 2
 enemy_bullet_speed = 0.5
 refreshAlienImage = 120
 refreshBulletImage = 25
@@ -38,6 +38,8 @@ wn.register_shape("crab1.gif")
 wn.register_shape("crab2.gif")
 wn.register_shape("binky1.gif")
 wn.register_shape("binky2.gif")
+wn.register_shape("skoob1.gif")
+wn.register_shape("skoob2.gif")
 wn.register_shape("cannon.gif")
 wn.register_shape("bullet.gif")
 wn.register_shape("explosion.gif")
@@ -113,8 +115,10 @@ for enemy in enemies:
 	setattr(enemy, "fired", False)
 	if ( enemy_number_for_shape <= 11 ):
 		enemy.shape("binky1.gif")
-	else:
+	elif ( enemy_number_for_shape >= 12 and  enemy_number_for_shape <= 33 ) :
 		enemy.shape("crab1.gif")
+	else:
+		enemy.shape("skoob1.gif")
 	
 	enemy.penup()
 	enemy.speed(0)
@@ -368,6 +372,12 @@ while True:
 				enemy.shape("binky2.gif")
 			elif ( enemy.shape() == "binky2.gif" ):
 				enemy.shape("binky1.gif")
+
+		for enemy in enemies:
+			if ( enemy.shape() == "skoob1.gif" ):
+				enemy.shape("skoob2.gif")
+			elif ( enemy.shape() == "skoob2.gif" ):
+				enemy.shape("skoob1.gif")
 
 
 	#refresh the image for animatio of enemy bullet
