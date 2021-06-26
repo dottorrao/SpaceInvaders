@@ -11,13 +11,13 @@ import random
 #============= Inizialization
 #speed of the player
 playerspeed = 20
-enemyspeed = 0.05
-bulletspeed = 2
+enemyspeed = 0.03
+bulletspeed = 1.5
 enemy_bullet_speed = 0.5
 refreshAlienImage = 120
 refreshBulletImage = 25
 start_game = False
-number_of_enemies = 30
+number_of_enemies = 55
 enemies_killed = 0
 
 #enemies can shot at maximum 3 bullet at time.
@@ -50,11 +50,11 @@ border_pen = turtle.Turtle()
 border_pen.speed(0)
 border_pen.color("white")
 border_pen.penup()
-border_pen.setposition(-300,-300)
+border_pen.setposition(-350,-350)
 border_pen.pendown()
 border_pen.pensize(3)
 for side in range(4):
-	border_pen.fd(600)
+	border_pen.fd(700)
 	border_pen.lt(90)
 border_pen.hideturtle()	
 
@@ -89,6 +89,7 @@ player.penup()
 player.speed(0)
 player.setposition(0, -250)
 player.setheading(90)
+player.shapesize(0.1,0.1)
 
 #chose a number of enemies
 #create an empty list of enemies
@@ -110,22 +111,22 @@ for enemy in enemies:
 	#enemy
 	#enemy.color("red")
 	setattr(enemy, "fired", False)
-	if ( enemy_number_for_shape <= 10 ):
+	if ( enemy_number_for_shape <= 11 ):
 		enemy.shape("binky1.gif")
 	else:
 		enemy.shape("crab1.gif")
 	
 	enemy.penup()
 	enemy.speed(0)
-	x = enemy_start_x + (50 * enemy_number_for_matrix)
+	x = enemy_start_x + (35 * enemy_number_for_matrix)
 	y = enemy_start_y
 	enemy.setposition(x, y)
 	#enemy.shapesize (0.5,0.5)
 	#update enemy number
 	enemy_number_for_matrix += 1
-	if enemy_number_for_matrix == 10:
+	if enemy_number_for_matrix == 11:
 		enemy_number_for_matrix = 0
-		enemy_start_y -= 50
+		enemy_start_y -= 40
 
 #player's bullet
 bullet = turtle.Turtle()
