@@ -14,7 +14,7 @@ from random import randint
 playerspeed = 20
 #speed of the enemies
 enemyspeed = 0.03
-#speed of player's bullet
+#speed of player's bullet 
 bulletspeed = 2
 #speed of enemies bullet
 enemy_bullet_speed = 0.5
