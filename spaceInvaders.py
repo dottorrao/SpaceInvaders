@@ -5,7 +5,7 @@ import turtle
 import os
 import time
 import math
-import random
+from random import randint
 
 #==================================================================
 # INITIALIZATION
@@ -28,6 +28,8 @@ number_of_enemies = 55
 enemies_killed = 0
 #set score to 0
 score = 0
+#refresh mistery ship sound: how many main loop cicle play the soud for mistery ship
+mistery_ship_sound = 45
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -189,14 +191,15 @@ setattr(enemy_bullet3,"fired",False)
 
 #mistery_ship
 mistery_ship = turtle.Turtle()
-mistery_ship.setposition(270,290)
-mistery_ship.shape("mistery_ship.gif")
 mistery_ship.penup()
+mistery_ship.setposition(330,290)
+mistery_ship.shape("mistery_ship.gif")
 mistery_ship.speed(0)
 mistery_ship.setheading(90)
 #mistery_ship.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(mistery_ship,"fired",False)
+setattr(mistery_ship,"displayed",False)
 mistery_ship.hideturtle()
 
 #==================================================================
@@ -257,6 +260,7 @@ turtle.onkey(fire_bullet, "space")
 #==================================================================
 counterChange = 0
 counterChangeEnemyBullet = 0
+counterChangeMisteryShipSound = 0
 flagMusEneMov = True
 
 while True: 
@@ -281,7 +285,7 @@ while True:
 			enemy.setx(x)
 			#print (getattr(enemy,"fired"))
 
-		print ( str(enemy.xcor()) + ' - ' + str ( enemy.ycor() ) ) 
+		#print ( str(enemy.xcor()) + ' - ' + str ( enemy.ycor() ) ) 
 
 		#move the enemy back
 		if ( (enemy.xcor() > 270 ) or (enemy.xcor() < -270 )  ) :
@@ -381,6 +385,21 @@ while True:
 			print ("Game Over")
 			break
 	
+	#check collision between player bullet and mistery ship
+	if isCollision(bullet, mistery_ship):
+		setattr(mistery_ship,"displayed",False)
+		os.system("afplay mistery_ship2.wav&")
+		#mistery_ship.shape("explosion.gif")
+		bullet.hideturtle()
+		#mistery_ship.hideturtle()
+		setattr(mistery_ship,"fired",False)
+		mistery_ship.setposition(330,290)
+		counterChangeMisteryShipSound = 0
+		score += 100
+		scorestring = "Score: %s" %score
+		score_pen.clear()
+		score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
+
 	#section to change the picture of animations
 	if ( counterChange == refreshAlienImage ):	
 		counterChange = 0
@@ -435,7 +454,6 @@ while True:
 	
 	#Check to see if the bullet has gone to the top
 	if bullet.ycor() > 290:
-		bullet.shape("explosion.gif")
 		bullet.hideturtle()
 		bulletstate = "ready"
 
@@ -469,3 +487,29 @@ while True:
 #==================================================================
 # MANAGING OF MISTERY ship
 #==================================================================
+
+	#check if mistery ship must start or not: only id mistery ship is not
+	#already displayed and if the random number is ok!
+	if not ( getattr(mistery_ship,"displayed") ):
+		random = randint(0, 100000) 
+		#print ( random )
+		if ( random > 99900):
+			mistery_ship.showturtle()
+			setattr(mistery_ship,"displayed",True)
+	
+	if ( getattr(mistery_ship,"displayed") ):
+		counterChangeMisteryShipSound += 1
+		x = mistery_ship.xcor() - 0.6
+		mistery_ship.setx(x)
+		print (counterChangeMisteryShipSound)
+		if ( counterChangeMisteryShipSound == mistery_ship_sound ):
+			counterChangeMisteryShipSound = 0
+			os.system("afplay mistery_ship.wav&")
+	
+	if ( mistery_ship.xcor() < -330 ):
+		setattr(mistery_ship,"displayed",False)
+		setattr(mistery_ship,"fired",False)
+		mistery_ship.hideturtle()
+		mistery_ship.setposition(330,290)
+		counterChangeMisteryShipSound = 0
+		
