@@ -45,6 +45,7 @@ wn.register_shape("bullet.gif")
 wn.register_shape("explosion.gif")
 wn.register_shape("enemy_laser.gif")
 wn.register_shape("enemy_laser_2.gif")
+wn.register_shape("mistery_navy.gif")
 wn.tracer(0)
 
 #============= Draw border
@@ -68,9 +69,9 @@ score_pen = turtle.Turtle()
 score_pen.speed(0)
 score_pen.color("white")
 score_pen.penup()
-score_pen.setposition(-290,280)
+score_pen.setposition(-30,315)
 scorestring = "Score: %s" %score
-score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal") )
+score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
 score_pen.hideturtle()
 
 '''
@@ -102,7 +103,7 @@ for i in range (number_of_enemies):
 	enemies.append(turtle.Turtle())
 
 enemy_start_x = -225
-enemy_start_y = 250
+enemy_start_y = 220
 #this variable is used to dispose the enemy in matrix
 enemy_number_for_matrix = 0
 #this variable is used to change the shape of the enemy
@@ -171,6 +172,17 @@ enemy_bullet3.setheading(90)
 enemy_bullet3.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet3,"fired",False)
+
+#mistery_navy
+mistery_navy = turtle.Turtle()
+mistery_navy.setposition(270,290)
+mistery_navy.shape("mistery_navy.gif")
+mistery_navy.penup()
+mistery_navy.speed(0)
+mistery_navy.setheading(90)
+#mistery_navy.hideturtle()
+#this attribute is used to define if bullet has been already shooted
+setattr(mistery_navy,"fired",False)
 
 #============= FUNCTION
 #Move the player left and right
@@ -305,7 +317,7 @@ while True:
 			score += 10
 			scorestring = "Score: %s" %score
 			score_pen.clear()
-		  	score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal") )
+		  	score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
 			#checking for enemies speed increase.
 			#if number of enemnies killed is equal to a certain target, the enemy speed is increased.
 			if ( enemies_killed ) == ( number_of_enemies // 5 ):
@@ -397,6 +409,12 @@ while True:
 		y = bullet.ycor()
 		y += bulletspeed
 		bullet.sety(y)
+	
+	#Check to see if the bullet has gone to the top
+	if bullet.ycor() > 290:
+		bullet.shape("explosion.gif")
+		bullet.hideturtle()
+		bulletstate = "ready"
 
 	#move enemy bullets
 	if getattr (enemy_bullet1,"fired"):
@@ -413,11 +431,6 @@ while True:
 		y = enemy_bullet3.ycor()
 		y -= enemy_bullet_speed
 		enemy_bullet3.sety(y)
-
-	#Check to see if the bullet has gone to the top
-	if bullet.ycor() > 275:
-		bullet.hideturtle()
-		bulletstate = "ready"
 
 	#Check to see if the enemy bullet has gone to the groud
 	if enemy_bullet1.ycor() == -250:
