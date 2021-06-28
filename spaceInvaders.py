@@ -7,18 +7,27 @@ import time
 import math
 import random
 
-
-#============= Inizialization
+#==================================================================
+# INITIALIZATION
+#==================================================================
 #speed of the player
 playerspeed = 20
+#speed of the enemies
 enemyspeed = 0.03
+#speed of player's bullet
 bulletspeed = 2
+#speed of enemies bullet
 enemy_bullet_speed = 0.5
+#this variable indicates the cicles after that alien image is refreshed. For the animation.
 refreshAlienImage = 120
+#this variable indicates the cicles after that bullet enemies image is refreshed. For the animation.
 refreshBulletImage = 25
-start_game = False
+#how many enememies are present in the "alien team".
 number_of_enemies = 55
+#this variable is increased every time that an alien is killed.
 enemies_killed = 0
+#set score to 0
+score = 0
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -30,10 +39,13 @@ enemies_killed = 0
 #fire - bulllet is firing
 bulletstate = "ready"
 
-#============= Set up the screen
+#==================================================================
+# SETTING UP OF THE SCREEN
+#==================================================================
 wn = turtle.Screen()
 wn.bgcolor("black")
 wn.title("Space Invaders")
+#registration of images
 wn.register_shape("crab1.gif")
 wn.register_shape("crab2.gif")
 wn.register_shape("binky1.gif")
@@ -45,10 +57,11 @@ wn.register_shape("bullet.gif")
 wn.register_shape("explosion.gif")
 wn.register_shape("enemy_laser.gif")
 wn.register_shape("enemy_laser_2.gif")
-wn.register_shape("mistery_navy.gif")
+wn.register_shape("mistery_ship.gif")
+#
 wn.tracer(0)
 
-#============= Draw border
+#Draw border
 border_pen = turtle.Turtle()
 border_pen.speed(0)
 border_pen.color("white")
@@ -60,9 +73,6 @@ for side in range(4):
 	border_pen.fd(700)
 	border_pen.lt(90)
 border_pen.hideturtle()	
-
-#set score to 0
-score = 0
 
 #draw the score
 score_pen = turtle.Turtle()
@@ -84,7 +94,9 @@ diplay_message_pen.setposition(0,0)
 diplay_message_pen.write("PRESS A BOTTON TO START", False, align="left", font=("Arial", 14, "normal") )
 '''
 
-#============= OBJECTS
+#==================================================================
+# OBJECTS 
+#==================================================================
 #player
 player = turtle.Turtle()
 player.shape("cannon.gif")
@@ -94,14 +106,14 @@ player.setposition(0, -250)
 player.setheading(90)
 player.shapesize(0.1,0.1)
 
-#chose a number of enemies
-#create an empty list of enemies
+#ENEMIES TEAM
+#chose a number of enemies create an empty list of enemies
 enemies = []
-
 #Add enemies in the list
 for i in range (number_of_enemies):
 	enemies.append(turtle.Turtle())
 
+#where the enemy team starts to be displayed
 enemy_start_x = -225
 enemy_start_y = 220
 #this variable is used to dispose the enemy in matrix
@@ -111,9 +123,9 @@ enemy_number_for_shape = 0
 
 for enemy in enemies:
 	enemy_number_for_shape += 1
-	#enemy
-	#enemy.color("red")
+	#setting attribute fired to understand if an alien has been killed or not
 	setattr(enemy, "fired", False)
+	#disposition on row of 11 with related pictures
 	if ( enemy_number_for_shape <= 11 ):
 		enemy.shape("binky1.gif")
 	elif ( enemy_number_for_shape >= 12 and  enemy_number_for_shape <= 33 ) :
@@ -121,12 +133,12 @@ for enemy in enemies:
 	else:
 		enemy.shape("skoob1.gif")
 	
+	#creation of the alien "matrix"
 	enemy.penup()
 	enemy.speed(0)
 	x = enemy_start_x + (35 * enemy_number_for_matrix)
 	y = enemy_start_y
 	enemy.setposition(x, y)
-	#enemy.shapesize (0.5,0.5)
 	#update enemy number
 	enemy_number_for_matrix += 1
 	if enemy_number_for_matrix == 11:
@@ -155,6 +167,7 @@ enemy_bullet1.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet1,"fired",False)
 
+#enemy fire bullet 2
 enemy_bullet2 = turtle.Turtle()
 enemy_bullet2.shape("enemy_laser.gif")
 enemy_bullet2.penup()
@@ -164,6 +177,7 @@ enemy_bullet2.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet2,"fired",False)
 
+#enemy fire bullet 3
 enemy_bullet3 = turtle.Turtle()
 enemy_bullet3.shape("enemy_laser.gif")
 enemy_bullet3.penup()
@@ -173,18 +187,21 @@ enemy_bullet3.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet3,"fired",False)
 
-#mistery_navy
-mistery_navy = turtle.Turtle()
-mistery_navy.setposition(270,290)
-mistery_navy.shape("mistery_navy.gif")
-mistery_navy.penup()
-mistery_navy.speed(0)
-mistery_navy.setheading(90)
-#mistery_navy.hideturtle()
+#mistery_ship
+mistery_ship = turtle.Turtle()
+mistery_ship.setposition(270,290)
+mistery_ship.shape("mistery_ship.gif")
+mistery_ship.penup()
+mistery_ship.speed(0)
+mistery_ship.setheading(90)
+#mistery_ship.hideturtle()
 #this attribute is used to define if bullet has been already shooted
-setattr(mistery_navy,"fired",False)
+setattr(mistery_ship,"fired",False)
+mistery_ship.hideturtle()
 
-#============= FUNCTION
+#==================================================================
+# FUNCTIONS
+#==================================================================
 #Move the player left and right
 def move_left():
 	x = player.xcor()
@@ -200,7 +217,7 @@ def move_right():
 		x = 270
 	player.setx(x)    
 
-#fire
+#fire (PLAYER)
 def fire_bullet():
 	#Declare bulletstate as a global 
 	global bulletstate
@@ -214,7 +231,7 @@ def fire_bullet():
 		bullet.setposition(x,y)
 		bullet.showturtle()
 
-#...
+#fire (aliens)
 def fire_bullet_enemy(enemy,bullet):
 	x = enemy.xcor()
 	y = enemy.ycor() - 30
@@ -229,18 +246,15 @@ def isCollision(t1,t2):
 	else:
 		return False
 
-def start_game_():
-	start_game = True
-
-
-#============= Create keyboard bindings
+#reate keyboard bindings to functions
 turtle.listen()
 turtle.onkey(move_left, "Left")
 turtle.onkey(move_right, "Right")
 turtle.onkey(fire_bullet, "space")
-turtle.onkey(start_game_, "s")
 
-#============= MAIN GAME LOOP
+#==================================================================
+# MAIN LOOP GAME!!
+#==================================================================
 counterChange = 0
 counterChangeEnemyBullet = 0
 flagMusEneMov = True
@@ -249,10 +263,14 @@ while True:
 	wn.update()
 	#move the enemy
 	
+	#these vaiables are used in combination with...
+	#to manage the animation (shape changing)
 	counterChange += 1   
 	counterChangeEnemyBullet += 1
 
-
+	#==================================================================
+	# MANAGING OF THE ENEMIES: movement, collision, animation, firing
+	#==================================================================
 	for enemy in enemies:
 		x = enemy.xcor()
 		x += enemyspeed
@@ -362,7 +380,8 @@ while True:
 			enemy.hideturtle()
 			print ("Game Over")
 			break
-
+	
+	#section to change the picture of animations
 	if ( counterChange == refreshAlienImage ):	
 		counterChange = 0
 		
@@ -404,6 +423,10 @@ while True:
 			enemy_bullet2.shape("enemy_laser.gif")
 			enemy_bullet3.shape("enemy_laser.gif")
 
+#==================================================================
+# MANAGING OF THE BULLETS: for enemy and player
+#==================================================================
+
 	#move the bullet       
 	if bulletstate == "fire":
 		y = bullet.ycor()
@@ -442,3 +465,7 @@ while True:
 	if enemy_bullet3.ycor() == -250:
 		enemy_bullet3.hideturtle()
 		setattr(enemy_bullet3,"fired",False)
+
+#==================================================================
+# MANAGING OF MISTERY ship
+#==================================================================
