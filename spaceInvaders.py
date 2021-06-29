@@ -324,6 +324,8 @@ while True:
 			setattr(enemy, "fired", True)
 			os.system("afplay enemy_explosion.wav&")
 			enemy.shape("explosion.gif")
+			wn.update()
+			time.sleep(0.01)
 			#reset the bullet
 			bullet.hideturtle()
 			bulletstate = "ready"
@@ -387,13 +389,16 @@ while True:
 	
 	#check collision between player bullet and mistery ship
 	if isCollision(bullet, mistery_ship):
+		mistery_ship.shape("explosion.gif")
 		setattr(mistery_ship,"displayed",False)
 		os.system("afplay mistery_ship2.wav&")
-		#mistery_ship.shape("explosion.gif")
-		bullet.hideturtle()
-		#mistery_ship.hideturtle()
+		wn.update()
+		time.sleep(0.01)
 		setattr(mistery_ship,"fired",False)
-		mistery_ship.setposition(330,290)
+		mistery_ship.hideturtle()
+		mistery_ship.setposition(330,290)	
+		mistery_ship.shape("mistery_ship.gif")
+		wn.update()	
 		counterChangeMisteryShipSound = 0
 		score += 100
 		scorestring = "Score: %s" %score
