@@ -30,6 +30,8 @@ enemies_killed = 0
 score = 0
 #refresh mistery ship sound: how many main loop cicle play the soud for mistery ship
 mistery_ship_sound = 45
+#manage mistery ship explosion in order explosion will remain at screen for some while
+mistery_ship_explosion = 500
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -261,6 +263,7 @@ turtle.onkey(fire_bullet, "space")
 counterChange = 0
 counterChangeEnemyBullet = 0
 counterChangeMisteryShipSound = 0
+couterExplosionMisteryShip = 0
 flagMusEneMov = True
 
 while True: 
@@ -388,22 +391,29 @@ while True:
 			break
 	
 	#check collision between player bullet and mistery ship
-	if isCollision(bullet, mistery_ship):
+	if isCollision(bullet, mistery_ship) and not ( getattr(mistery_ship,"fired") ):
 		mistery_ship.shape("explosion.gif")
-		setattr(mistery_ship,"displayed",False)
 		os.system("afplay mistery_ship2.wav&")
-		wn.update()
-		time.sleep(0.01)
-		setattr(mistery_ship,"fired",False)
-		mistery_ship.hideturtle()
-		mistery_ship.setposition(330,290)	
-		mistery_ship.shape("mistery_ship.gif")
-		wn.update()	
-		counterChangeMisteryShipSound = 0
+		setattr(mistery_ship,"fired",True)
+		score_pen.clear()
 		score += 100
 		scorestring = "Score: %s" %score
-		score_pen.clear()
 		score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
+		wn.update()
+
+	#to manage mistery ship explosion	
+	if 	getattr(mistery_ship,"fired"):
+		couterExplosionMisteryShip +=1
+		if ( couterExplosionMisteryShip == mistery_ship_explosion ):
+			couterExplosionMisteryShip = 0
+			setattr(mistery_ship,"displayed",False)
+			setattr(mistery_ship,"fired",False)
+			mistery_ship.hideturtle()
+			mistery_ship.setposition(330,290)	
+			mistery_ship.shape("mistery_ship.gif")
+			wn.update()	
+			counterChangeMisteryShipSound = 0
+
 
 	#section to change the picture of animations
 	if ( counterChange == refreshAlienImage ):	
@@ -495,14 +505,14 @@ while True:
 
 	#check if mistery ship must start or not: only id mistery ship is not
 	#already displayed and if the random number is ok!
-	if not ( getattr(mistery_ship,"displayed") ):
+	if not ( getattr(mistery_ship,"displayed") ) and not ( getattr(mistery_ship,"fired") ):
 		random = randint(0, 100000) 
 		#print ( random )
-		if ( random > 99900):
+		if ( random > 99500):
 			mistery_ship.showturtle()
 			setattr(mistery_ship,"displayed",True)
 	
-	if ( getattr(mistery_ship,"displayed") ):
+	if ( getattr(mistery_ship,"displayed") ) and not ( getattr (mistery_ship,"fired") ) :
 		counterChangeMisteryShipSound += 1
 		x = mistery_ship.xcor() - 0.6
 		mistery_ship.setx(x)
