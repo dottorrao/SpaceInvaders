@@ -13,7 +13,7 @@ from random import randint
 #speed of the player
 playerspeed = 20
 #speed of the enemies
-enemyspeed = 0.03
+enemyspeed = 0.02
 #speed of player's bullet 
 bulletspeed = 2
 #speed of enemies bullet
@@ -62,7 +62,7 @@ wn.register_shape("explosion.gif")
 wn.register_shape("enemy_laser.gif")
 wn.register_shape("enemy_laser_2.gif")
 wn.register_shape("mistery_ship.gif")
-#
+wn.register_shape("explosion_mistery_ship.gif")
 wn.tracer(0)
 
 #Draw border
@@ -83,9 +83,9 @@ score_pen = turtle.Turtle()
 score_pen.speed(0)
 score_pen.color("white")
 score_pen.penup()
-score_pen.setposition(-30,315)
+score_pen.setposition(-40,300)
 scorestring = "Score: %s" %score
-score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
+score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
 score_pen.hideturtle()
 
 '''
@@ -344,7 +344,7 @@ while True:
 			score += 10
 			scorestring = "Score: %s" %score
 			score_pen.clear()
-		  	score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
+		  	score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
 			#checking for enemies speed increase.
 			#if number of enemnies killed is equal to a certain target, the enemy speed is increased.
 			if ( enemies_killed ) == ( number_of_enemies // 5 ):
@@ -392,13 +392,13 @@ while True:
 	
 	#check collision between player bullet and mistery ship
 	if isCollision(bullet, mistery_ship) and not ( getattr(mistery_ship,"fired") ):
-		mistery_ship.shape("explosion.gif")
+		mistery_ship.shape("explosion_mistery_ship.gif")
 		os.system("afplay mistery_ship2.wav&")
 		setattr(mistery_ship,"fired",True)
 		score_pen.clear()
 		score += 100
 		scorestring = "Score: %s" %score
-		score_pen.write(scorestring, False, align="left", font=("Curier", 20, "normal") )
+		score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
 		wn.update()
 
 	#to manage mistery ship explosion	
