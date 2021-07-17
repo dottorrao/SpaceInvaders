@@ -78,6 +78,11 @@ border_pen.pensize(3)
 for side in range(4):
 	border_pen.fd(700)
 	border_pen.lt(90)
+border_pen.penup()
+border_pen.setposition(-300,-300)
+border_pen.pendown()
+border_pen.pencolor("green")
+border_pen.fd(600)
 border_pen.hideturtle()	
 
 #draw the score
@@ -508,7 +513,7 @@ while True:
 	#If the enemy bullet touch the groud, explosion image is displayd.
 	#Then the bullet is hided, original shape is re-set, 
 	#bullet1
-	if enemy_bullet1.ycor() < -250:
+	if enemy_bullet1.ycor() < -290:
 		if (not getattr(enemy_bullet1,"ground")):
 			print(1)
 			setattr(enemy_bullet1,"ground",True)
@@ -520,7 +525,7 @@ while True:
 		setattr(enemy_bullet1,"fired",False)
 	
 	#bullet2
-	if enemy_bullet2.ycor() < -250:
+	if enemy_bullet2.ycor() < -290:
 		if (not getattr(enemy_bullet2,"ground")):
 			print(2)
 			setattr(enemy_bullet2,"ground",True)
@@ -532,7 +537,7 @@ while True:
 		setattr(enemy_bullet2,"fired",False)
 	
 	#bullet3
-	if enemy_bullet3.ycor() < -250:
+	if enemy_bullet3.ycor() < -290:
 		if (not getattr(enemy_bullet3,"ground")):
 			print(3)
 			setattr(enemy_bullet3,"ground",True)
