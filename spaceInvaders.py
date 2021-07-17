@@ -63,6 +63,8 @@ wn.register_shape("enemy_laser.gif")
 wn.register_shape("enemy_laser_2.gif")
 wn.register_shape("mistery_ship.gif")
 wn.register_shape("explosion_mistery_ship.gif")
+wn.register_shape("bullet_explosion.gif")
+wn.register_shape("enemy_bullet_explosion.gif")
 wn.tracer(0)
 
 #Draw border
@@ -140,7 +142,7 @@ for enemy in enemies:
 	#creation of the alien "matrix"
 	enemy.penup()
 	enemy.speed(0)
-	x = enemy_start_x + (35 * enemy_number_for_matrix)
+	x = enemy_start_x + (40 * enemy_number_for_matrix)
 	y = enemy_start_y
 	enemy.setposition(x, y)
 	#update enemy number
@@ -158,6 +160,7 @@ bullet.speed(0)
 bullet.setheading(90)
 #bullet.shapesize(0.5,0.5)
 bullet.hideturtle()
+setattr (bullet,"top",False)
 
 #we have at maximum three bullets for enemy displayed into screen.
 # it's needed to define all three bullets differently in order to manage them. 
@@ -170,6 +173,7 @@ enemy_bullet1.setheading(90)
 enemy_bullet1.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet1,"fired",False)
+setattr(enemy_bullet1,"ground",False)
 
 #enemy fire bullet 2
 enemy_bullet2 = turtle.Turtle()
@@ -180,6 +184,7 @@ enemy_bullet2.setheading(90)
 enemy_bullet2.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet2,"fired",False)
+setattr(enemy_bullet2,"ground",False)
 
 #enemy fire bullet 3
 enemy_bullet3 = turtle.Turtle()
@@ -190,6 +195,7 @@ enemy_bullet3.setheading(90)
 enemy_bullet3.hideturtle()
 #this attribute is used to define if bullet has been already shooted
 setattr(enemy_bullet3,"fired",False)
+setattr(enemy_bullet3,"ground",False)
 
 #mistery_ship
 mistery_ship = turtle.Turtle()
@@ -235,6 +241,7 @@ def fire_bullet():
 		y = player.ycor() + 30
 		bullet.setposition(x,y)
 		bullet.showturtle()
+		setattr (bullet,"top",False) 
 
 #fire (aliens)
 def fire_bullet_enemy(enemy,bullet):
@@ -242,6 +249,7 @@ def fire_bullet_enemy(enemy,bullet):
 	y = enemy.ycor() - 30
 	bullet.setposition(x,y)
 	bullet.showturtle()
+	setattr(bullet,"ground",False)
 
 #function to detect collisions between player bullets and enemies
 def isCollision(t1,t2):
@@ -292,8 +300,8 @@ while True:
 
 		#move the enemy back
 		if ( (enemy.xcor() > 270 ) or (enemy.xcor() < -270 )  ) :
-			print ("revert!")
-			print ( enemy.xcor() )
+			#print ("revert!")
+			#print ( enemy.xcor() )
 			#revert the direction and move all enemy down
 			enemyspeed *= -1
 			for e in enemies:
@@ -393,6 +401,7 @@ while True:
 	#check collision between player bullet and mistery ship
 	if isCollision(bullet, mistery_ship) and not ( getattr(mistery_ship,"fired") ):
 		mistery_ship.shape("explosion_mistery_ship.gif")
+		bullet.setposition(0,10000)
 		os.system("afplay mistery_ship2.wav&")
 		setattr(mistery_ship,"fired",True)
 		score_pen.clear()
@@ -468,9 +477,16 @@ while True:
 		bullet.sety(y)
 	
 	#Check to see if the bullet has gone to the top
-	if bullet.ycor() > 290:
+	if bullet.ycor() > 310:
+		if ( not getattr (bullet,"top") ):
+			setattr (bullet,"top",True) 
+			bullet.shape("bullet_explosion.gif") 
+			wn.update()
+			time.sleep(0.02)
+			bullet.shape("bullet.gif")
 		bullet.hideturtle()
 		bulletstate = "ready"
+		bullet.setposition(0,10000)
 
 	#move enemy bullets
 	if getattr (enemy_bullet1,"fired"):
@@ -489,13 +505,41 @@ while True:
 		enemy_bullet3.sety(y)
 
 	#Check to see if the enemy bullet has gone to the groud
-	if enemy_bullet1.ycor() == -250:
+	#If the enemy bullet touch the groud, explosion image is displayd.
+	#Then the bullet is hided, original shape is re-set, 
+	#bullet1
+	if enemy_bullet1.ycor() < -250:
+		if (not getattr(enemy_bullet1,"ground")):
+			print(1)
+			setattr(enemy_bullet1,"ground",True)
+			enemy_bullet1.shape("enemy_bullet_explosion.gif")
+			wn.update()
+			time.sleep(0.01)
+			enemy_bullet1.shape("enemy_laser.gif")
 		enemy_bullet1.hideturtle()
 		setattr(enemy_bullet1,"fired",False)
-	if enemy_bullet2.ycor() == -250:
+	
+	#bullet2
+	if enemy_bullet2.ycor() < -250:
+		if (not getattr(enemy_bullet2,"ground")):
+			print(2)
+			setattr(enemy_bullet2,"ground",True)
+			enemy_bullet2.shape("enemy_bullet_explosion.gif")
+			wn.update()
+			time.sleep(0.01)
+			enemy_bullet2.shape("enemy_laser.gif")
 		enemy_bullet2.hideturtle()
 		setattr(enemy_bullet2,"fired",False)
-	if enemy_bullet3.ycor() == -250:
+	
+	#bullet3
+	if enemy_bullet3.ycor() < -250:
+		if (not getattr(enemy_bullet3,"ground")):
+			print(3)
+			setattr(enemy_bullet3,"ground",True)
+			enemy_bullet3.shape("enemy_bullet_explosion.gif")
+			wn.update()
+			time.sleep(0.01)
+			enemy_bullet3.shape("enemy_laser.gif")
 		enemy_bullet3.hideturtle()
 		setattr(enemy_bullet3,"fired",False)
 
@@ -516,7 +560,7 @@ while True:
 		counterChangeMisteryShipSound += 1
 		x = mistery_ship.xcor() - 0.6
 		mistery_ship.setx(x)
-		print (counterChangeMisteryShipSound)
+		#print (counterChangeMisteryShipSound)
 		if ( counterChangeMisteryShipSound == mistery_ship_sound ):
 			counterChangeMisteryShipSound = 0
 			os.system("afplay mistery_ship.wav&")
