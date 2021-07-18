@@ -13,11 +13,11 @@ from random import randint
 #speed of the player
 playerspeed = 20
 #speed of the enemies
-enemyspeed = 0.02
+enemyspeed = 0.015
 #speed of player's bullet 
-bulletspeed = 2
+bulletspeed = 1.5
 #speed of enemies bullet
-enemy_bullet_speed = 0.5
+enemy_bullet_speed = 0.4
 #this variable indicates the cicles after that alien image is refreshed. For the animation.
 refreshAlienImage = 120
 #this variable indicates the cicles after that bullet enemies image is refreshed. For the animation.
@@ -32,6 +32,8 @@ score = 0
 mistery_ship_sound = 45
 #manage mistery ship explosion in order explosion will remain at screen for some while
 mistery_ship_explosion = 500
+#speed of mistery ship
+mistery_ship_speed = 0.3
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -521,9 +523,17 @@ while True:
 			wn.update()
 			time.sleep(0.01)
 			enemy_bullet1.shape("enemy_laser.gif")
+			#every time that an enemy bullet hit the grund, a hole is generated!
+			border_pen.penup()
+			border_pen.setposition(enemy_bullet1.xcor(),-300)
+			border_pen.pendown()
+			border_pen.pencolor("black")
+			border_pen.dot()
+			border_pen.penup()
+		
 		enemy_bullet1.hideturtle()
 		setattr(enemy_bullet1,"fired",False)
-	
+
 	#bullet2
 	if enemy_bullet2.ycor() < -290:
 		if (not getattr(enemy_bullet2,"ground")):
@@ -533,9 +543,17 @@ while True:
 			wn.update()
 			time.sleep(0.01)
 			enemy_bullet2.shape("enemy_laser.gif")
+			#every time that an enemy bullet hit the grund, a hole is generated!
+			border_pen.penup()
+			border_pen.setposition(enemy_bullet2.xcor(),-300)
+			border_pen.pendown()
+			border_pen.pencolor("black")
+			border_pen.dot()
+			border_pen.penup()
+		
 		enemy_bullet2.hideturtle()
 		setattr(enemy_bullet2,"fired",False)
-	
+
 	#bullet3
 	if enemy_bullet3.ycor() < -290:
 		if (not getattr(enemy_bullet3,"ground")):
@@ -545,6 +563,14 @@ while True:
 			wn.update()
 			time.sleep(0.01)
 			enemy_bullet3.shape("enemy_laser.gif")
+			#every time that an enemy bullet hit the grund, a hole is generated!
+			border_pen.penup()
+			border_pen.setposition(enemy_bullet3.xcor(),-300)
+			border_pen.pendown()
+			border_pen.pencolor("black")
+			border_pen.dot()
+			border_pen.penup()
+			
 		enemy_bullet3.hideturtle()
 		setattr(enemy_bullet3,"fired",False)
 
@@ -557,13 +583,13 @@ while True:
 	if not ( getattr(mistery_ship,"displayed") ) and not ( getattr(mistery_ship,"fired") ):
 		random = randint(0, 100000) 
 		#print ( random )
-		if ( random > 99500):
+		if ( random > 99950):
 			mistery_ship.showturtle()
 			setattr(mistery_ship,"displayed",True)
 	
 	if ( getattr(mistery_ship,"displayed") ) and not ( getattr (mistery_ship,"fired") ) :
 		counterChangeMisteryShipSound += 1
-		x = mistery_ship.xcor() - 0.6
+		x = mistery_ship.xcor() - mistery_ship_speed
 		mistery_ship.setx(x)
 		#print (counterChangeMisteryShipSound)
 		if ( counterChangeMisteryShipSound == mistery_ship_sound ):
@@ -576,4 +602,3 @@ while True:
 		mistery_ship.hideturtle()
 		mistery_ship.setposition(330,290)
 		counterChangeMisteryShipSound = 0
-		
