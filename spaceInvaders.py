@@ -17,7 +17,7 @@ enemyspeed = 0.015
 #speed of player's bullet 
 bulletspeed = 1.5
 #speed of enemies bullet
-enemy_bullet_speed = 0.4
+enemy_bullet_speed = 0.3
 #this variable indicates the cicles after that alien image is refreshed. For the animation.
 refreshAlienImage = 120
 #this variable indicates the cicles after that bullet enemies image is refreshed. For the animation.
@@ -92,9 +92,14 @@ score_pen = turtle.Turtle()
 score_pen.speed(0)
 score_pen.color("white")
 score_pen.penup()
-score_pen.setposition(-40,300)
-scorestring = "Score: %s" %score
-score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
+score_pen.setposition(-200,300) 
+score_pen.write("Score<1>", False, align="left", font=("Space Invaders", 20, "normal") )
+score_pen.setposition(-180,270)
+score_pen.write(score, False, align="left", font=("Space Invaders", 20, "normal") )
+score_pen.setposition(-50,300)
+score_pen.write("HI-SCORE", False, align="left", font=("Space Invaders", 20, "normal") )
+score_pen.setposition(110,300)
+score_pen.write("Score<2>", False, align="left", font=("Space Invaders", 20, "normal") )
 score_pen.hideturtle()
 
 '''
@@ -128,7 +133,7 @@ for i in range (number_of_enemies):
 
 #where the enemy team starts to be displayed
 enemy_start_x = -225
-enemy_start_y = 220
+enemy_start_y = 180
 #this variable is used to dispose the enemy in matrix
 enemy_number_for_matrix = 0
 #this variable is used to change the shape of the enemy
@@ -207,7 +212,7 @@ setattr(enemy_bullet3,"ground",False)
 #mistery_ship
 mistery_ship = turtle.Turtle()
 mistery_ship.penup()
-mistery_ship.setposition(330,290)
+mistery_ship.setposition(330,240)
 mistery_ship.shape("mistery_ship.gif")
 mistery_ship.speed(0)
 mistery_ship.setheading(90)
@@ -357,9 +362,16 @@ while True:
 			enemy.setposition(enemy.xcor(), enemy.ycor())
 			#update the score
 			score += 10
-			scorestring = "Score: %s" %score
 			score_pen.clear()
-		  	score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
+			score_pen.setposition(-200,300) 
+			score_pen.write("Score<1>", False, align="left", font=("Space Invaders", 20, "normal") )
+			score_pen.setposition(-180,270)
+			score_pen.write(score, False, align="left", font=("Space Invaders", 20, "normal") )
+			score_pen.setposition(-50,300)
+			score_pen.write("HI-SCORE", False, align="left", font=("Space Invaders", 20, "normal") )
+			score_pen.setposition(110,300)
+			score_pen.write("Score<2>", False, align="left", font=("Space Invaders", 20, "normal") )
+			score_pen.hideturtle()
 			#checking for enemies speed increase.
 			#if number of enemnies killed is equal to a certain target, the enemy speed is increased.
 			if ( enemies_killed ) == ( number_of_enemies // 5 ):
@@ -413,8 +425,14 @@ while True:
 		setattr(mistery_ship,"fired",True)
 		score_pen.clear()
 		score += 100
-		scorestring = "Score: %s" %score
-		score_pen.write(scorestring, False, align="left", font=("Space Invaders", 20, "normal") )
+		score_pen.setposition(-200,300) 
+		score_pen.write("Score<1>", False, align="left", font=("Space Invaders", 20, "normal") )
+		score_pen.setposition(-180,270)
+		score_pen.write(score, False, align="left", font=("Space Invaders", 20, "normal") )
+		score_pen.setposition(-50,300)
+		score_pen.write("HI-SCORE", False, align="left", font=("Space Invaders", 20, "normal") )
+		score_pen.setposition(110,300)
+		score_pen.write("Score<2>", False, align="left", font=("Space Invaders", 20, "normal") )
 		wn.update()
 
 	#to manage mistery ship explosion	
@@ -425,7 +443,7 @@ while True:
 			setattr(mistery_ship,"displayed",False)
 			setattr(mistery_ship,"fired",False)
 			mistery_ship.hideturtle()
-			mistery_ship.setposition(330,290)	
+			mistery_ship.setposition(330,240)	
 			mistery_ship.shape("mistery_ship.gif")
 			wn.update()	
 			counterChangeMisteryShipSound = 0
@@ -600,5 +618,5 @@ while True:
 		setattr(mistery_ship,"displayed",False)
 		setattr(mistery_ship,"fired",False)
 		mistery_ship.hideturtle()
-		mistery_ship.setposition(330,290)
+		mistery_ship.setposition(330,240)
 		counterChangeMisteryShipSound = 0
