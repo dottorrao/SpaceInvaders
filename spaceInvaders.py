@@ -34,6 +34,8 @@ mistery_ship_sound = 45
 mistery_ship_explosion = 500
 #speed of mistery ship
 mistery_ship_speed = 0.3
+#number of life
+life_number = 3
 
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
@@ -68,6 +70,8 @@ wn.register_shape("mistery_ship.gif")
 wn.register_shape("explosion_mistery_ship.gif")
 wn.register_shape("bullet_explosion.gif")
 wn.register_shape("enemy_bullet_explosion.gif")
+wn.register_shape("player_explosion_1.gif")
+wn.register_shape("player_explosion_2.gif")
 wn.tracer(0)
 
 #Draw border
@@ -111,15 +115,21 @@ welcome_pen.speed(0)
 welcome_pen.write("PRESS SPACE TO START", False, align="left", font=("Space Invaders", 20, "normal") )
 welcome_pen.hideturtle()
 
-'''
-#draw the screen message (press start to play... game over...)
-diplay_message_pen = turtle.Turtle()
-diplay_message_pen.speed(0)
-diplay_message_pen.color("white")
-diplay_message_pen.penup()
-diplay_message_pen.setposition(0,0)
-diplay_message_pen.write("PRESS A BOTTON TO START", False, align="left", font=("Arial", 14, "normal") )
-'''
+#live pens
+#life_pen is drowing the cannon
+#life_pen_string is displaying "X"
+life_pen = turtle.Turtle()
+life_pen.up()
+life_pen.setposition(-285,-320)
+life_pen.speed(0)
+life_pen.shape("cannon.gif")
+life_pen_string = turtle.Turtle()
+life_pen_string.color("white")
+life_pen_string.up()
+life_pen_string.setposition(-260,-335)
+life_pen_string.down()
+life_pen_string.write("X " + str(life_number), False, align="left", font=("Space Invaders", 18, "normal") )
+life_pen_string.hideturtle()
 
 #==================================================================
 # OBJECTS 
@@ -307,6 +317,17 @@ flagMusEneMov = True
 while True:  
 	wn.update()
 
+	#if player has been killed and terminate lives, GAME OVER is displayed, enemy_speed = 0 and game is terminated.
+	if ( life_number == 0 ):
+		welcome_pen.setposition(-90,-100)
+		welcome_pen.clear()
+		welcome_pen.color("green")
+		welcome_pen.speed(0)
+		welcome_pen.write("GAME OVER!", False, align="left", font=("Space Invaders", 20, "normal") )
+		welcome_pen.hideturtle()
+		player.hideturtle()
+		enemyspeed = 0
+
 	if (beginGame):
 		#move the enemy
 		#these vaiables are used in combination with...
@@ -325,14 +346,14 @@ while True:
 			#descending of whole alien "team"
 			if not(getattr(enemy,"fired")):
 				enemy.setx(x)
-				#print (getattr(enemy,"fired"))
+				## (getattr(enemy,"fired"))
 
-			#print ( str(enemy.xcor()) + ' - ' + str ( enemy.ycor() ) ) 
+			## ( str(enemy.xcor()) + ' - ' + str ( enemy.ycor() ) ) 
 
 			#move the enemy back
 			if ( (enemy.xcor() > 270 ) or (enemy.xcor() < -270 )  ) :
-				#print ("revert!")
-				#print ( enemy.xcor() )
+				## ("revert!")
+				## ( enemy.xcor() )
 				#revert the direction and move all enemy down
 				enemyspeed *= -1
 				for e in enemies:
@@ -348,7 +369,7 @@ while True:
 				val = player.xcor() - enemy.xcor()
 				if ( abs(val) < 50):
 				#if (1==1):
-					#print ("this enemy is upper to player!")
+					## ("this enemy is upper to player!")
 					#checking if there are enemy bullets available: only three at same time can be shooted
 					if not ( getattr(enemy_bullet1,"fired") ):
 						fire_bullet_enemy (enemy,enemy_bullet1)
@@ -409,32 +430,103 @@ while True:
 					enemyspeed *= 2
 			
 			#check collision between player and enemy bullet
-			#if isCollision(enemy_bullet1, player):
-			if 1==0:
-				player.hideturtle()
-				enemy.hideturtle()
-				print ("Game Over")
-				break
+			#in this case
+			# 1) enemies stop to walk for 3 seconds
+			# 2) shape of playe must be changed to 'exposion'
+			# 3) player lifes must be decreased by 1 
+			# 4) all enemy bullets on the screen are deleted
+			# 5) player is moved on left side
+			if isCollision(enemy_bullet1, player):
+			#if 1==0:
+				os.system("afplay explosion.wav&")
+				old_enemy_speed = enemyspeed
+				enemyspeed = 0
+				t_end = time.time() + 3
+				enemy_bullet1.setposition(-400,-400)
+				enemy_bullet2.setposition(-400,-400)
+				enemy_bullet3.setposition(-400,-400)
+				enemy_bullet1.clear()
+				enemy_bullet2.clear()
+				enemy_bullet3.clear()
+				while time.time() < t_end:
+					player.shape("player_explosion_1.gif")
+					wn.update()
+					player.shape("player_explosion_2.gif")
+					wn.update()
+					time.sleep(0.1)
+				enemyspeed = old_enemy_speed
+				player.setposition(-250, -250)
+				player.shape("cannon.gif")
+				life_number -= 1
+				life_pen_string.setposition(-260,-335)
+				life_pen_string.down()
+				life_pen_string.clear()
+				life_pen_string.write("X " + str(life_number), False, align="left", font=("Space Invaders", 18, "normal") )
+				life_pen_string.hideturtle()
+				wn.update()
 
-			#if isCollision(enemy_bullet2, player):
-			if 1==0:	
-				player.hideturtle()
-				enemy.hideturtle()
-				print ("Game Over")
-				break
+			if isCollision(enemy_bullet2, player):
+			#if 1==0:	
+				os.system("afplay explosion.wav&")
+				old_enemy_speed = enemyspeed
+				enemyspeed = 0
+				t_end = time.time() + 3
+				enemy_bullet1.setposition(-400,-400)
+				enemy_bullet2.setposition(-400,-400)
+				enemy_bullet3.setposition(-400,-400)
+				enemy_bullet1.clear()
+				enemy_bullet2.clear()
+				enemy_bullet3.clear()
+				while time.time() < t_end:
+					player.shape("player_explosion_1.gif")
+					wn.update()
+					player.shape("player_explosion_2.gif")
+					wn.update()
+					time.sleep(0.01)
+				enemyspeed = old_enemy_speed
+				player.setposition(-250, -250)
+				player.shape("cannon.gif")
+				life_number -= 1
+				life_pen_string.setposition(-260,-335)
+				life_pen_string.down()
+				life_pen_string.clear()
+				life_pen_string.write("X " + str(life_number), False, align="left", font=("Space Invaders", 18, "normal") )
+				life_pen_string.hideturtle()
+				wn.update()
 
-			#if isCollision(enemy_bullet3, player):
-			if 1==0:
-				player.hideturtle()
-				enemy.hideturtle()
-				print ("Game Over")
-				break
+			if isCollision(enemy_bullet3, player):
+			#if 1==0:
+				os.system("afplay explosion.wav&")
+				old_enemy_speed = enemyspeed
+				enemyspeed = 0
+				t_end = time.time() + 3
+				enemy_bullet1.setposition(-400,-400)
+				enemy_bullet2.setposition(-400,-400)
+				enemy_bullet3.setposition(-400,-400)
+				enemy_bullet1.clear()
+				enemy_bullet2.clear()
+				enemy_bullet3.clear()
+				while time.time() < t_end:
+					player.shape("player_explosion_1.gif")
+					wn.update()
+					player.shape("player_explosion_2.gif")
+					wn.update()
+					time.sleep(0.01)
+				enemyspeed = old_enemy_speed
+				player.setposition(-250, -250)
+				player.shape("cannon.gif")
+				life_number -= 1
+				life_pen_string.setposition(-260,-335)
+				life_pen_string.down()
+				life_pen_string.clear()
+				life_pen_string.write("X " + str(life_number), False, align="left", font=("Space Invaders", 18, "normal") )
+				life_pen_string.hideturtle()
+				wn.update()
 
 			if isCollision(player, enemy):
 				player.hideturtle()
-				enemy.hideturtle()
-				print ("Game Over")
-				break
+				#enemy.hideturtle()
+
 		
 		#check collision between player bullet and mistery ship
 		if isCollision(bullet, mistery_ship) and not ( getattr(mistery_ship,"fired") ):
@@ -554,7 +646,6 @@ while True:
 		#bullet1
 		if enemy_bullet1.ycor() < -290:
 			if (not getattr(enemy_bullet1,"ground")):
-				print(1)
 				setattr(enemy_bullet1,"ground",True)
 				enemy_bullet1.shape("enemy_bullet_explosion.gif")
 				wn.update()
@@ -574,7 +665,6 @@ while True:
 		#bullet2
 		if enemy_bullet2.ycor() < -290:
 			if (not getattr(enemy_bullet2,"ground")):
-				print(2)
 				setattr(enemy_bullet2,"ground",True)
 				enemy_bullet2.shape("enemy_bullet_explosion.gif")
 				wn.update()
@@ -594,7 +684,6 @@ while True:
 		#bullet3
 		if enemy_bullet3.ycor() < -290:
 			if (not getattr(enemy_bullet3,"ground")):
-				print(3)
 				setattr(enemy_bullet3,"ground",True)
 				enemy_bullet3.shape("enemy_bullet_explosion.gif")
 				wn.update()
@@ -619,7 +708,7 @@ while True:
 		#already displayed and if the random number is ok!
 		if not ( getattr(mistery_ship,"displayed") ) and not ( getattr(mistery_ship,"fired") ):
 			random = randint(0, 100000) 
-			#print ( random )
+			## ( random )
 			if ( random > 99950):
 				mistery_ship.showturtle()
 				setattr(mistery_ship,"displayed",True)
@@ -628,7 +717,7 @@ while True:
 			counterChangeMisteryShipSound += 1
 			x = mistery_ship.xcor() - mistery_ship_speed
 			mistery_ship.setx(x)
-			#print (counterChangeMisteryShipSound)
+			## (counterChangeMisteryShipSound)
 			if ( counterChangeMisteryShipSound == mistery_ship_sound ):
 				counterChangeMisteryShipSound = 0
 				os.system("afplay mistery_ship.wav&")
