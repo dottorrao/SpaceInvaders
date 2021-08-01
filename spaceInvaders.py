@@ -316,10 +316,13 @@ def make_enemy_matrix():
 		#disposition on row of 11 with related pictures
 		if ( enemy_number_for_shape <= 11 ):
 			enemy.shape("binky1.gif")
+			setattr (enemy,"points",50)
 		elif ( enemy_number_for_shape >= 12 and  enemy_number_for_shape <= 33 ) :
 			enemy.shape("crab1.gif")
+			setattr (enemy,"points",30)
 		else:
 			enemy.shape("skoob1.gif")
+			setattr (enemy,"points",10)
 		#creation of the alien "matrix"
 		enemy.penup()
 		enemy.speed(0)
@@ -452,7 +455,7 @@ while True:
 				enemy.setposition(0,100000)
 				enemy.setposition(enemy.xcor(), enemy.ycor())
 				#update the score
-				score += 10
+				score += getattr(enemy,"points")
 				score_pen.clear()
 				score_pen.setposition(-200,300) 
 				score_pen.write("Score<1>", False, align="left", font=("Space Invaders", 20, "normal") )
