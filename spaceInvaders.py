@@ -22,8 +22,6 @@ enemy_bullet_speed = 0.3
 refreshAlienImage = 120
 #this variable indicates the cicles after that bullet enemies image is refreshed. For the animation.
 refreshBulletImage = 25
-#how many enememies are present in the "alien team".
-number_of_enemies = 55
 #this variable is increased every time that an alien is killed.
 enemies_killed = 0
 #set score to 0
@@ -36,12 +34,10 @@ mistery_ship_explosion = 500
 mistery_ship_speed = 0.3
 #number of life
 life_number = 3
-
 #enemies can shot at maximum 3 bullet at time.
 #this list is update at real time and take note of which bullets are fired and "live"
 #into screem
 #enemy_fires = [0,0,0]
-
 #Define bullet state
 #ready - ready to fire
 #fire - bulllet is firing
@@ -145,11 +141,13 @@ player.shapesize(0.1,0.1)
 
 #ENEMIES TEAM
 #chose a number of enemies create an empty list of enemies
+number_of_enemies = 5
 enemies = []
+
+'''
 #Add enemies in the list
 for i in range (number_of_enemies):
 	enemies.append(turtle.Turtle())
-
 #where the enemy team starts to be displayed
 enemy_start_x = -225
 enemy_start_y = 180
@@ -157,7 +155,6 @@ enemy_start_y = 180
 enemy_number_for_matrix = 0
 #this variable is used to change the shape of the enemy
 enemy_number_for_shape = 0
-
 for enemy in enemies:
 	enemy_number_for_shape += 1
 	#setting attribute fired to understand if an alien has been killed or not
@@ -181,6 +178,7 @@ for enemy in enemies:
 	if enemy_number_for_matrix == 11:
 		enemy_number_for_matrix = 0
 		enemy_start_y -= 40
+'''
 
 #player's bullet
 bullet = turtle.Turtle()
@@ -296,6 +294,43 @@ def start_game():
 	beginGame = True
 	welcome_pen.clear()
 
+def make_enemy_matrix():
+	#Add enemies in the list
+	global enemies
+	enemies = []
+	for i in range (number_of_enemies):
+		enemies.append(turtle.Turtle())
+	#where the enemy team starts to be displayed
+	enemy_start_x = -225
+	enemy_start_y = 180
+	#this variable is used to dispose the enemy in matrix
+	enemy_number_for_matrix = 0
+	#this variable is used to change the shape of the enemy
+	enemy_number_for_shape = 0
+	for enemy in enemies:
+		enemy_number_for_shape += 1
+		#setting attribute fired to understand if an alien has been killed or not
+		setattr(enemy, "fired", False)
+		#disposition on row of 11 with related pictures
+		if ( enemy_number_for_shape <= 11 ):
+			enemy.shape("binky1.gif")
+		elif ( enemy_number_for_shape >= 12 and  enemy_number_for_shape <= 33 ) :
+			enemy.shape("crab1.gif")
+		else:
+			enemy.shape("skoob1.gif")
+		#creation of the alien "matrix"
+		enemy.penup()
+		enemy.speed(0)
+		x = enemy_start_x + (40 * enemy_number_for_matrix)
+		y = enemy_start_y
+		enemy.setposition(x, y)
+		time.sleep(0.05)
+		wn.update()
+		#update enemy number
+		enemy_number_for_matrix += 1
+		if enemy_number_for_matrix == 11:
+			enemy_number_for_matrix = 0
+			enemy_start_y -= 40
 
 #reate keyboard bindings to functions
 turtle.listen()
@@ -313,8 +348,10 @@ counterChangeEnemyBullet = 0
 counterChangeMisteryShipSound = 0
 couterExplosionMisteryShip = 0
 flagMusEneMov = True
+#this flag is used to understand if first loop is ongoig. This is used to generate the alien matrix only at first run!
+isFirstLoop = True
 
-while True:  
+while True:	 
 	wn.update()
 
 	#if player has been killed and terminate lives, GAME OVER is displayed, enemy_speed = 0 and game is terminated.
@@ -328,7 +365,11 @@ while True:
 		player.hideturtle()
 		enemyspeed = 0
 
-	if (beginGame):
+	if (beginGame): 
+		if ( isFirstLoop ):
+			make_enemy_matrix()
+			isFirstLoop = False
+
 		#move the enemy
 		#these vaiables are used in combination with...
 		#to manage the animation (shape changing)
@@ -728,3 +769,8 @@ while True:
 			mistery_ship.hideturtle()
 			mistery_ship.setposition(330,240)
 			counterChangeMisteryShipSound = 0
+	
+	if ( enemies_killed == number_of_enemies ):
+		enemies_killed = 0
+		make_enemy_matrix()
+		enemyspeed = 0.015
