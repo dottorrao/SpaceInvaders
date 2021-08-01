@@ -70,6 +70,44 @@ wn.register_shape("player_explosion_1.gif")
 wn.register_shape("player_explosion_2.gif")
 wn.tracer(0)
 
+#=====================================
+#TABLE OF POINT: at the beginning of the game a table with points of all enemies is displayed.
+#is didplayed an image of the enemy and the related point on the right.
+table_points_pen = turtle.Turtle()
+table_points_pen.speed(0)
+table_points_pen.color("white")
+table_points_pen.penup()
+table_points_pen.hideturtle()
+
+table_points_pen.setposition(-70,100) 
+table_points_pen.write(" =    50 POINTS", False, align="left", font=("Space Invaders", 20, "normal") )
+binky = turtle.Turtle()
+binky.penup()
+binky.setposition(-100,120)
+binky.shape("binky1.gif")
+
+table_points_pen.setposition(-70,70) 
+table_points_pen.write(" =    30 POINTS", False, align="left", font=("Space Invaders", 20, "normal") )
+crab = turtle.Turtle()
+crab.penup()
+crab.setposition(-100,90)
+crab.shape("crab1.gif")
+
+table_points_pen.setposition(-70,40) 
+table_points_pen.write(" =    10 POINTS", False, align="left", font=("Space Invaders", 20, "normal") )
+skoob = turtle.Turtle()
+skoob.penup()
+skoob.setposition(-100,60)
+skoob.shape("skoob1.gif")
+
+table_points_pen.setposition(-70,10) 
+table_points_pen.write(" =    ? POINTS", False, align="left", font=("Space Invaders", 20, "normal") )
+misterys = turtle.Turtle()
+misterys.penup()
+misterys.setposition(-100,30)
+misterys.shape("mistery_ship.gif")
+#=====================================
+
 #Draw border
 border_pen = turtle.Turtle()
 border_pen.speed(0)
@@ -141,44 +179,8 @@ player.shapesize(0.1,0.1)
 
 #ENEMIES TEAM
 #chose a number of enemies create an empty list of enemies
-number_of_enemies = 5
+number_of_enemies = 55
 enemies = []
-
-'''
-#Add enemies in the list
-for i in range (number_of_enemies):
-	enemies.append(turtle.Turtle())
-#where the enemy team starts to be displayed
-enemy_start_x = -225
-enemy_start_y = 180
-#this variable is used to dispose the enemy in matrix
-enemy_number_for_matrix = 0
-#this variable is used to change the shape of the enemy
-enemy_number_for_shape = 0
-for enemy in enemies:
-	enemy_number_for_shape += 1
-	#setting attribute fired to understand if an alien has been killed or not
-	setattr(enemy, "fired", False)
-	#disposition on row of 11 with related pictures
-	if ( enemy_number_for_shape <= 11 ):
-		enemy.shape("binky1.gif")
-	elif ( enemy_number_for_shape >= 12 and  enemy_number_for_shape <= 33 ) :
-		enemy.shape("crab1.gif")
-	else:
-		enemy.shape("skoob1.gif")
-	
-	#creation of the alien "matrix"
-	enemy.penup()
-	enemy.speed(0)
-	x = enemy_start_x + (40 * enemy_number_for_matrix)
-	y = enemy_start_y
-	enemy.setposition(x, y)
-	#update enemy number
-	enemy_number_for_matrix += 1
-	if enemy_number_for_matrix == 11:
-		enemy_number_for_matrix = 0
-		enemy_start_y -= 40
-'''
 
 #player's bullet
 bullet = turtle.Turtle()
@@ -332,7 +334,7 @@ def make_enemy_matrix():
 			enemy_number_for_matrix = 0
 			enemy_start_y -= 40
 
-#reate keyboard bindings to functions
+#create keyboard bindings to functions
 turtle.listen()
 turtle.onkey(move_left, "Left")
 turtle.onkey(move_right, "Right") 
@@ -367,8 +369,16 @@ while True:
 
 	if (beginGame): 
 		if ( isFirstLoop ):
+			#at the beginning of the game, only during first loop, the table of the points must be removed from screen.
+			table_points_pen.clear()
+			skoob.hideturtle()
+			binky.hideturtle()
+			crab.hideturtle()
+			misterys.hideturtle()
 			make_enemy_matrix()
+			wn.update()
 			isFirstLoop = False
+
 
 		#move the enemy
 		#these vaiables are used in combination with...
